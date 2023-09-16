@@ -3,8 +3,12 @@ from collections import Counter
 import math
 
 # 两篇待比较的文档的路径
-sourcefile = 'D:\\software_engineering\\test_text\\orig.txt'
-s2 = 'D:\\software_engineering\\test_text\\orig_0.8_add.txt'
+test_01 = 'D:\\software_engineering\\test_text\\test_01.txt'
+test_02 = 'D:\\software_engineering\\test_text\\test_02.txt'
+orig = 'D:\\software_engineering\\test_text\\orig.txt'
+orig_08_add = 'D:\\software_engineering\\test_text\\orig_0.8_add.txt'
+orig_08_del = 'D:\\software_engineering\\test_text\\orig_0.8_del.txt'
+orig_08_dis_1 = 'D:\\software_engineering\\test_text\\orig_0.8_dis_1.txt'
 
 #将文本分成词汇，通过jieba库实现
 def Count(file_path):
@@ -34,7 +38,7 @@ def MergeWord(T1,T2):
         return MergeWord
 
 # 得出文档向量，通过TF算法实现
-def CalVector(T1,MergeWord):
+def Vector(T1,MergeWord):
     TF1 = [0] * len(MergeWord)
 
     for ch in range(len(T1)):
@@ -50,8 +54,8 @@ def CalVector(T1,MergeWord):
         # print(TF1)
     return TF1
 
-
-def CalConDis(v1,v2,lengthVector):
+#余弦相似度计算
+def CosCount(v1,v2,lengthVector):
 
         # 计算出两个向量的乘积
         B = 0
@@ -80,29 +84,32 @@ def CalConDis(v1,v2,lengthVector):
         A = math.sqrt(A1) * math.sqrt(A2)
         print('两篇文章的相似度 = ' + format(float(B) / A,".3f"))
 
+def test(file1,file2):
+    T1 = Count(file1)
+    # print("文档1的词频统计如下：")
+    # print(T1)
+    # print()
+    T2 = Count(file2)
+    # print("文档2的词频统计如下：")
+    # print(T2)
+    # print()
+    # 合并两篇文档的关键词
+    mergeword = MergeWord(T1,T2)
+    # print("两篇文档关键词：")
+    # print(mergeword)
+    # print(len(mergeword))
+    # 得出文档向量
+    v1 = Vector(T1,mergeword)
+    # print("文档1向量化得到的向量如下：")
+    # print(v1)
+    # print()
+    v2 = Vector(T2,mergeword)
+    # print("文档2向量化得到的向量如下：")
+    # print(v2)
+    # print()
+    # 计算余弦距离
+    CosCount(v1,v2,len(v1))
 
-
-T1 = Count(sourcefile)
-print("文档1的词频统计如下：")
-print(T1)
-print()
-T2 = Count(s2)
-print("文档2的词频统计如下：")
-print(T2)
-print()
-# 合并两篇文档的关键词
-mergeword = MergeWord(T1,T2)
-print("两篇文档关键词：")
-print(mergeword)
-print(len(mergeword))
-# 得出文档向量
-v1 = CalVector(T1,mergeword)
-print("文档1向量化得到的向量如下：")
-print(v1)
-print()
-v2 = CalVector(T2,mergeword)
-print("文档2向量化得到的向量如下：")
-print(v2)
-print()
-# 计算余弦距离
-CalConDis(v1,v2,len(v1))
+test(orig,orig_08_del)
+test(orig,orig_08_add)
+test(orig,orig_08_dis_1)
